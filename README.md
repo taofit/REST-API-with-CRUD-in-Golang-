@@ -32,7 +32,7 @@ Stolen bikes is a typical problem in Malmö, where the Docly HQ is. We need your
 # Instructions
 
 - Fork this repo
-- Build a clean and robust React app
+- Build a clean and robust API
 - Publish the app on your chosen cloud provider
 - Let us know that you've completed the challenge and where we can test it
 
