@@ -24,10 +24,10 @@ Stolen bikes is a typical problem in Malmö, where the Docly HQ is. We need your
 
 # Your challenge
 
-- Create an API that satisfies the requirments above
-- Create a simple front-end to interact with the API, or documentation on how to use Postman (or similar tool) to interact
+- Create an API that satisfies the requirments above.
+- Create documentation on how to use Postman (or similar tool) to interact with the API.
 - You can use any boilerplate and tools that you want to but we advice you to keep it simple. A clean, robust API is what we're looking for, and we're usually in favor of using all available tools and tricks to get things done.
-- You can deploy your app on whatever cloud provider you wish (zeit, heroku, gcp etc)
+- You can deploy your app on whatever cloud provider you wish (zeit, heroku, gcp etc).
 
 # Instructions
 
