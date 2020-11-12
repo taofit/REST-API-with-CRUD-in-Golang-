@@ -9,7 +9,7 @@ Stolen bikes is a typical problem in Malmö, where the Docly HQ is. We need your
 
 - [ ] The police wants to able to add, edit and remove officers. (See data model suggestion below)
 - [ ] Private citizens want to be able to report stolen bikes. (See data model suggestion below)
-- [ ] The system should assign a police offers to handle stolen bike cases as they are being reported.
+- [ ] The system should assign a police officer to handle stolen bike cases as they are being reported.
   - [ ] A police officer can only handle one case at a time.
 - [ ] The police should be able to report bikes as found.
   - [ ] When the police finds a bike the case should be marked as resolved and the police officer in charge of the case should be marked as available to take a new case.
@@ -35,6 +35,16 @@ Stolen bikes is a typical problem in Malmö, where the Docly HQ is. We need your
 - Build a clean and robust API
 - Let us know that you've completed the challenge and how we can test it.
 
+- police officer end point:
+  - http://localhost:8080/officers method: GET, description: fetch all the police officer 
+  - http://localhost:8080/officers/{id} method: GET, description: fetch one police officer
+  - http://localhost:8080/officers/{id} method: PUT, description: modify one police officer
+  - http://localhost:8080/officers method: POST, description: create one police officer          example: {"name": "Lars"}
+  - http://localhost:8080/officers/{id} method: DELETE, description: remove one police officer
+
+- bike thefts case management end point:
+  - http://localhost:8080/bike-thefts method: GET, description: to fetch all bike theft case
+  - 
 # Suggested data model
 
 ### Police officers

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/taofit/go-challenge/internal"
+	"github.com/taofit/coding-challenge-backend/internal"
 )
 
 func handleOfficers(router *mux.Router) {
@@ -19,16 +19,21 @@ func handleOfficers(router *mux.Router) {
 
 func handleBikeThefts(router *mux.Router) {
 	router.HandleFunc("/bike-thefts", internal.CreateCase).Methods("POST")
+	router.HandleFunc("/bike-thefts-no-image", internal.CreateCaseNoImage).Methods("POST")
 	router.HandleFunc("/bike-thefts", internal.GetCases).Methods("GET")
 	router.HandleFunc("/bike-thefts/{id}", internal.GetCase).Methods("GET")
 	router.HandleFunc("/bike-thefts/{id}", internal.UpdateCase).Methods("PUT")
-	router.HandleFunc("/bike-thefts/image/{id}", internal.ImageHandler).Methods("GET")
+	router.HandleFunc("/bike-thefts/image/{id}", internal.GetImage).Methods("GET")
 }
 
-func assignCaseToOfficer() {
+func assignCaseToOfficer(router *mux.Router) {
+	router.HandleFunc("/case-to-officer", internal.AssignCaseToEnOfficer).Methods("POST")
+}
+
+func autoAssignCaseToOfficer() {
 	for {
-		time.Sleep(30 * time.Second)
-		internal.AssignCase()
+		time.Sleep(30 * time.Minute)
+		internal.AssignCases()
 	}
 }
 func main() {
@@ -36,7 +41,8 @@ func main() {
 	router := mux.NewRouter()
 	handleOfficers(router)
 	handleBikeThefts(router)
-	go assignCaseToOfficer()
+	assignCaseToOfficer(router)
+	// go autoAssignCaseToOfficer()
 	err := http.ListenAndServe(":8080", router)
 	if err != nil {
 		panic(err.Error())

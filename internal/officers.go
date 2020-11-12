@@ -28,6 +28,7 @@ func GetOfficers(w http.ResponseWriter, r *http.Request) {
 	selResult, err := db.Query("SELECT * FROM officers ORDER BY id DESC")
 	if err != nil {
 		respondWithJSON(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
 	officers := []Officer{}
@@ -64,12 +65,14 @@ func GetOfficer(w http.ResponseWriter, r *http.Request) {
 	err = selResult.Scan(&id, &name)
 
 	if err != nil {
-		panic(err.Error())
+		respondWithJSON(w, http.StatusBadRequest, err.Error())
+		return
 	}
+	defer db.Close()
+
 	officer.ID = id
 	officer.NAME = name
 
-	defer db.Close()
 	json.NewEncoder(w).Encode(&officer)
 }
 

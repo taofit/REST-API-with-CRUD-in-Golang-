@@ -26,7 +26,7 @@ type TheftCase struct {
 	IMAGE       []byte
 }
 
-func createCase(w http.ResponseWriter, r *http.Request) {
+func CreateCaseNoImage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var theftCase TheftCase
 
@@ -41,11 +41,13 @@ func createCase(w http.ResponseWriter, r *http.Request) {
 	insert, err := db.Prepare("INSERT INTO bike_thefts(title, brand, city, description) VALUES(?,?,?,?)")
 	if err != nil {
 		respondWithJSON(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
 	_, err = insert.Exec(theftCase.TITLE, theftCase.BRAND, theftCase.CITY, theftCase.DESCRIPTION)
 	if err != nil {
 		respondWithJSON(w, http.StatusBadRequest, err.Error())
+		return
 	}
 	defer db.Close()
 	// uploadFile(w, r)
@@ -65,6 +67,7 @@ func GetCases(w http.ResponseWriter, r *http.Request) {
 								ORDER BY bt.id DESC`)
 	if err != nil {
 		respondWithJSON(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
 	theftCases := []TheftCase{}
@@ -112,6 +115,7 @@ func GetCase(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		respondWithJSON(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
 	defer db.Close()
@@ -139,10 +143,12 @@ func UpdateCase(w http.ResponseWriter, r *http.Request) {
 	updateResult, err := db.Prepare("UPDATE bike_thefts SET solved=? WHERE id=?")
 	if err != nil {
 		respondWithJSON(w, http.StatusBadRequest, err.Error())
+		return
 	}
 	_, err = updateResult.Exec(theftCase.SOLVED, id)
 	if err != nil {
 		respondWithJSON(w, http.StatusBadRequest, err.Error())
+		return
 	}
 	defer db.Close()
 
@@ -173,11 +179,13 @@ func CreateCase(w http.ResponseWriter, r *http.Request) {
 	insert, err := db.Prepare("INSERT INTO bike_thefts(title, brand, city, description, image) VALUES(?,?,?,?,?)")
 	if err != nil {
 		respondWithJSON(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
 	_, err = insert.Exec(theftCase.TITLE, theftCase.BRAND, theftCase.CITY, theftCase.DESCRIPTION, theftCase.IMAGE)
 	if err != nil {
 		respondWithJSON(w, http.StatusBadRequest, err.Error())
+		return
 	}
 	defer db.Close()
 
@@ -187,30 +195,30 @@ func CreateCase(w http.ResponseWriter, r *http.Request) {
 }
 
 func uploadFile(w http.ResponseWriter, r *http.Request, theftCase *TheftCase) {
-	fmt.Println("File Upload Endpoint Hit")
+	log.Println("File Upload Endpoint Hit")
 	r.ParseMultipartForm(10 << 20)
 
 	file, handler, err := r.FormFile("image")
 	if err != nil {
-		fmt.Println("error retrieving the file")
-		fmt.Println(err)
+		log.Println("error retrieving the file")
+		log.Println(err)
 		return
 	}
 	defer file.Close()
-	fmt.Printf("Uploaded File: %+v\n", handler.Filename)
-	fmt.Printf("File Size: %+v\n", handler.Size)
-	fmt.Printf("MIME Header: %+v\n", handler.Header)
+	log.Printf("Uploaded File: %+v\n", handler.Filename)
+	log.Printf("File Size: %+v\n", handler.Size)
+	log.Printf("MIME Header: %+v\n", handler.Header)
 
 	fileBytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
 	theftCase.IMAGE = fileBytes
 	fmt.Fprintf(w, "Successfully Uploaded File\n")
 }
 
-func ImageHandler(w http.ResponseWriter, r *http.Request) {
+func GetImage(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, err := strconv.Atoi(params["id"])
 
@@ -226,6 +234,7 @@ func ImageHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		respondWithJSON(w, http.StatusBadRequest, err.Error())
+		return
 	}
 	defer db.Close()
 
