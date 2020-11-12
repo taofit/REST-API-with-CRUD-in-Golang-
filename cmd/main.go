@@ -19,8 +19,8 @@ func handleOfficers(router *mux.Router) {
 
 func handleBikeThefts(router *mux.Router) {
 	router.HandleFunc("/bike-thefts", internal.CreateCase).Methods("POST")
-	router.HandleFunc("/bike-thefts-no-image", internal.CreateCaseNoImage).Methods("POST")
 	router.HandleFunc("/bike-thefts", internal.GetCases).Methods("GET")
+	router.HandleFunc("/bike-thefts-no-image", internal.CreateCaseNoImage).Methods("POST")
 	router.HandleFunc("/bike-thefts/{id}", internal.GetCase).Methods("GET")
 	router.HandleFunc("/bike-thefts/{id}", internal.UpdateCase).Methods("PUT")
 	router.HandleFunc("/bike-thefts/image/{id}", internal.GetImage).Methods("GET")
