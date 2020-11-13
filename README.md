@@ -35,28 +35,39 @@ Stolen bikes is a typical problem in Malmö, where the Docly HQ is. We need your
 - Build a clean and robust API
 - Let us know that you've completed the challenge and how we can test it.
 
-- police officer end point:
-  - http://localhost:8080/officers          method: GET, description: fetch all the police officer 
-  - http://localhost:8080/officers/{id}     method: GET, description: fetch one police officer
-  - http://localhost:8080/officers/{id}     method: PUT, description: modify one police officer
-  - http://localhost:8080/officers method:  POST, description: create one police officer          example: {"name": "Lars"}
-  - http://localhost:8080/officers/{id}     method: DELETE, description: remove one police officer
+- police officer endpoint:
+  - http://localhost:8080/officers                method: GET, description: fetch all the police officers 
+  - http://localhost:8080/officers/{id}           method: GET, description: fetch one police officer by id, for example fetch officer whose id is 3: http://localhost:8080/officers/3
+  - http://localhost:8080/officers/{id}           method: PUT, description: modify one police officer, go to Postman->Body->raw, enter: {"name": "Ellie Johansson"}
+  - http://localhost:8080/officers                method: POST, description: create one police officer, go to Postman->Body->raw, enter: example: {"name": "Lars Nilsson"}
+  - http://localhost:8080/officers/{id}           method: DELETE, description: remove one police officer
 
-- bike thefts case management end point:
-  - http://localhost:8080/bike-thefts             method: GET, description: to fetch all bike theft case
-  - http://localhost:8080/bike-thefts             method: POST, description: to create a bike theft case        
-                                                  example: {"title": "people who live with it",
-                                                            "brand": "water soul",
-                                                            "city": "Helsingborg",
-                                                            "description": "black, fint and well build 28 model"
-                                                           }
-  - http://localhost:8080/bike-thefts-no-image    method: POST, description: to create all bike theft case with out image file
+- bike thefts case management endpoint:
+  - http://localhost:8080/bike-thefts             method: GET, description: to fetch all bike theft cases
+  - http://localhost:8080/bike-thefts             method: POST, description: to create a bike theft case with one image file
+                                                  example: go to Postman->Body->form-data, 
+                                                  step 1: upload image file, under `KEY` enter `image` and choose `file`, under `VALUE` select an image file from the local computer.      
+                                                  step 2: enter json data, in Postman->Body->form-data, under `KEY` enter `data`, under `VALUE` paste the json data like below:
+                                                  {
+                                                      "title": "people who are Joyriders",
+                                                      "brand": "water soul",
+                                                      "city": "malmö",
+                                                      "description": "black, fint and well built, 28 model"
+                                                  }
+  - http://localhost:8080/bike-thefts-no-image    method: POST, description: to create a bike theft case without image file
+                                                  example: go to Postman->Body->raw, enter the json data like below:
+                                                  {
+                                                      "title": "someone who is a Joyrider",
+                                                      "brand": "apron kitten",
+                                                      "city": "malmö",
+                                                      "description": "green, old and well built, 24 model"
+                                                  }
   - http://localhost:8080/bike-thefts/{id}        method: GET, description: to fetch a bike theft case
-  - http://localhost:8080/bike-thefts/{id}        method: PUT, description: to modify a bike theft case
-  - http://localhost:8080/bike-thefts/image/{id}  method: GET, description: to fetch a bike image
+  - http://localhost:8080/bike-thefts/{id}        method: PUT, description: to modify a bike theft case, example: {"solved": true}
+  - http://localhost:8080/bike-thefts/image/{id}  method: GET, description: to fetch a bike image by case id
 
-- assign one case to an officer  
-  - http://localhost:8080/case-to-officer method: POST example: {"case": 12,"officer": 3} 
+- assign a case to an officer  
+  - http://localhost:8080/case-to-officer         method: POST, example: {"case": 12,"officer": 3}, note: case id and officer id
 # Suggested data model
 
 ### Police officers

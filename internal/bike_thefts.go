@@ -156,7 +156,7 @@ func UpdateCase(w http.ResponseWriter, r *http.Request) {
 	if theftCase.SOLVED {
 		resolved = "resolved"
 	}
-	message := "UPDATE bike theft ID:" + strconv.Itoa(theftCase.ID) + " to " + resolved
+	message := "UPDATE bike theft ID:" + strconv.Itoa(id) + " to " + resolved
 	log.Println(message)
 	respondWithJSON(w, http.StatusBadRequest, message)
 }
