@@ -36,13 +36,18 @@ func autoAssignCaseToOfficer() {
 		internal.AssignCases()
 	}
 }
-func main() {
-	fmt.Println("Bike Theft Report API")
-	router := mux.NewRouter()
+
+func initializeRoutes(router *mux.Router) {
 	handleOfficers(router)
 	handleBikeThefts(router)
 	assignCaseToOfficer(router)
-	go autoAssignCaseToOfficer()
+}
+
+func main() {
+	fmt.Println("Bike Theft Report API")
+	router := mux.NewRouter()
+	initializeRoutes(router)
+	// go autoAssignCaseToOfficer()
 	err := http.ListenAndServe(":8080", router)
 	if err != nil {
 		panic(err.Error())
