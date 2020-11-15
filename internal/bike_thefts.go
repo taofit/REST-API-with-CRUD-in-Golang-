@@ -37,7 +37,7 @@ func CreateCaseNoImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := dbConn()
+	db := DbConn()
 	insert, err := db.Prepare("INSERT INTO bike_thefts(title, brand, city, description) VALUES(?,?,?,?)")
 	if err != nil {
 		respondWithJSON(w, http.StatusBadRequest, err.Error())
@@ -59,7 +59,7 @@ func CreateCaseNoImage(w http.ResponseWriter, r *http.Request) {
 
 func GetCases(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	db := dbConn()
+	db := DbConn()
 	selResult, err := db.Query(`SELECT bt.id, bt.title, bt.brand, bt.city, bt.description, bt.reported, bt.updated, bt.solved, IFNULL(o.id, 0), IFNULL(o.name, '')
 								FROM bike_thefts bt
 								LEFT JOIN officers o
@@ -99,7 +99,7 @@ func GetCase(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := dbConn()
+	db := DbConn()
 	var officerId int
 	var officerName string
 	selResult := db.QueryRow(`SELECT bt.id, bt.title, bt.brand, bt.city, bt.description, bt.reported, bt.updated, bt.solved, IFNULL(bt.image, ''), IFNULL(o.id, 0), IFNULL(o.name, '')
@@ -139,7 +139,7 @@ func UpdateCase(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := dbConn()
+	db := DbConn()
 	updateResult, err := db.Prepare("UPDATE bike_thefts SET solved=? WHERE id=?")
 	if err != nil {
 		respondWithJSON(w, http.StatusBadRequest, err.Error())
@@ -175,7 +175,7 @@ func CreateCase(w http.ResponseWriter, r *http.Request) {
 	}
 	uploadFile(w, r, &theftCase)
 
-	db := dbConn()
+	db := DbConn()
 	insert, err := db.Prepare("INSERT INTO bike_thefts(title, brand, city, description, image) VALUES(?,?,?,?,?)")
 	if err != nil {
 		respondWithJSON(w, http.StatusBadRequest, err.Error())
@@ -227,7 +227,7 @@ func GetImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := dbConn()
+	db := DbConn()
 	var img []byte
 	selResult := db.QueryRow(`SELECT IFNULL(image, '') FROM bike_thefts WHERE id=?`, id)
 	err = selResult.Scan(&img)

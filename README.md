@@ -35,14 +35,22 @@ Stolen bikes is a typical problem in Malmö, where the Docly HQ is. We need your
 - Build a clean and robust API
 - Let us know that you've completed the challenge and how we can test it.
 
-- police officer endpoint:
+# How to run and test the API
+  
+1. Firstly, run all the statements in go.sql file to create a mysql database and its tables.
+2. Go to cmd folder and run command: `go run main.go` to run start server.
+3. Open Postman->Body->raw, enter the json data according to the requirement in each endpoint below.
+4. To run test, go to cms folder and run command: `go test -v`
+5. API endpoints to the requirements is below:
+
+- [ ] The police wants to able to add, edit and remove officers. (police officer endpoint:)
   - http://localhost:8080/officers                method: GET, description: fetch all the police officers 
   - http://localhost:8080/officers/{id}           method: GET, description: fetch one police officer by id, for example fetch officer whose id is 3: http://localhost:8080/officers/3
   - http://localhost:8080/officers/{id}           method: PUT, description: modify one police officer, go to Postman->Body->raw, enter: {"name": "Ellie Johansson"}
   - http://localhost:8080/officers                method: POST, description: create one police officer, go to Postman->Body->raw, enter: example: {"name": "Lars Nilsson"}
   - http://localhost:8080/officers/{id}           method: DELETE, description: remove one police officer
 
-- bike thefts case management endpoint:
+- [ ] Private citizens want to be able to report stolen bikes. (bike thefts case management endpoint:)
   - http://localhost:8080/bike-thefts             method: GET, description: to fetch all bike theft cases
   - http://localhost:8080/bike-thefts             method: POST, description: to create a bike theft case with one image file
                                                   example: go to Postman->Body->form-data, 
@@ -63,11 +71,17 @@ Stolen bikes is a typical problem in Malmö, where the Docly HQ is. We need your
                                                       "description": "green, old and well built, 24 model"
                                                   }
   - http://localhost:8080/bike-thefts/{id}        method: GET, description: to fetch a bike theft case
-  - http://localhost:8080/bike-thefts/{id}        method: PUT, description: to modify a bike theft case, example: {"solved": true}
   - http://localhost:8080/bike-thefts/image/{id}  method: GET, description: to fetch a bike image by case id
 
-- assign a case to an officer  
+- [ ] The police should be able to report bikes as found. When the police finds a bike the case should be marked as resolved
+  - http://localhost:8080/bike-thefts/{id}        method: PUT, description: to modify a bike theft case, example: {"solved": true}
+
+- [ ] The system should assign a police officer to handle stolen bike cases as they are being reported. (assign a case to an officer)
   - http://localhost:8080/case-to-officer         method: POST, example: {"case": 12,"officer": 3}, note: case id and officer id
+
+- [ ] The police officer in charge of the case should be marked as available to take a new case. 
+  - It is achieved by looking for officer who does not have unsolved cases in the bike_theft table
+
 # Suggested data model
 
 ### Police officers

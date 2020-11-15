@@ -30,7 +30,7 @@ func AssignCases() {
 }
 
 func getIdsOfAvailableOfficer() []int {
-	db := dbConn()
+	db := DbConn()
 	rows, err := db.Query(`SELECT o.id FROM officers o
 		LEFT JOIN bike_thefts bt
 		ON o.id = bt.officer AND bt.solved = 0
@@ -60,7 +60,7 @@ func getIdsOfAvailableOfficer() []int {
 }
 
 func getNumOfAvailableCase() int {
-	db := dbConn()
+	db := DbConn()
 	availableCaseNum := 0
 
 	err := db.QueryRow(
@@ -75,7 +75,7 @@ func getNumOfAvailableCase() int {
 }
 
 func updateBikeTheft(officerId int) {
-	db := dbConn()
+	db := DbConn()
 	updateResult, err := db.Prepare("UPDATE bike_thefts SET officer=? WHERE solved = 0 AND officer IS NULL LIMIT 1")
 	if err != nil {
 		panic(err.Error())
@@ -99,7 +99,7 @@ func AssignCaseToEnOfficer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := dbConn()
+	db := DbConn()
 	updateResult, err := db.Prepare(`UPDATE bike_thefts 
 										SET officer = ?
 										WHERE 
@@ -131,7 +131,7 @@ func AssignCaseToEnOfficer(w http.ResponseWriter, r *http.Request) {
 }
 
 func checkOfficer(w http.ResponseWriter, id int) (bool, string) {
-	db := dbConn()
+	db := DbConn()
 	officerId := 0
 	err := db.QueryRow(
 		`SELECT id FROM officers

@@ -24,10 +24,10 @@ func respondWithJSON(w http.ResponseWriter, code int, message interface{}) {
 
 func GetOfficers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	db := dbConn()
+	db := DbConn()
 	selResult, err := db.Query("SELECT * FROM officers ORDER BY id DESC")
 	if err != nil {
-		respondWithJSON(w, http.StatusBadRequest, err.Error())
+		respondWithJSON(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
 		return
 	}
 
@@ -53,11 +53,11 @@ func GetOfficer(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
-		respondWithJSON(w, http.StatusBadRequest, "Invalid officer ID")
+		respondWithJSON(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
 		return
 	}
 
-	db := dbConn()
+	db := DbConn()
 	selResult := db.QueryRow("SELECT * FROM officers WHERE id=?", id)
 	officer := Officer{}
 
@@ -65,7 +65,7 @@ func GetOfficer(w http.ResponseWriter, r *http.Request) {
 	err = selResult.Scan(&id, &name)
 
 	if err != nil {
-		respondWithJSON(w, http.StatusBadRequest, err.Error())
+		respondWithJSON(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
 		return
 	}
 	defer db.Close()
@@ -82,18 +82,20 @@ func UpdateOfficer(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
-		respondWithJSON(w, http.StatusBadRequest, "Invalid officer ID")
+		respondWithJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid officer ID: " + params["id"]})
 		return
 	}
 	var officer Officer
-	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&officer); err != nil {
-		respondWithJSON(w, http.StatusBadRequest, "Invalid request officer")
+	_ = json.NewDecoder(r.Body).Decode(&officer)
+
+	if officer.NAME == "" {
+		respondWithJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid request officer"})
 		return
 	}
+
 	officer.ID = id
 
-	db := dbConn()
+	db := DbConn()
 	updateResult, err := db.Prepare("UPDATE officers SET name=? WHERE id=?")
 	if err != nil {
 		panic(err.Error())
@@ -101,9 +103,9 @@ func UpdateOfficer(w http.ResponseWriter, r *http.Request) {
 	updateResult.Exec(officer.NAME, officer.ID)
 	defer db.Close()
 
-	message := "UPDATE: Name: " + officer.NAME + " for ID:" + strconv.Itoa(officer.ID)
+	message := "UPDATE officer: " + officer.NAME
 	log.Println(message)
-	respondWithJSON(w, http.StatusAccepted, message)
+	respondWithJSON(w, http.StatusAccepted, map[string]string{"success": message, "name": officer.NAME, "id": strconv.Itoa(officer.ID)})
 }
 
 func CreateOfficer(w http.ResponseWriter, r *http.Request) {
@@ -111,11 +113,11 @@ func CreateOfficer(w http.ResponseWriter, r *http.Request) {
 	var officer Officer
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&officer); err != nil {
-		respondWithJSON(w, http.StatusBadRequest, "Invalid request officer")
+		respondWithJSON(w, http.StatusBadRequest, map[string]string{"error": "Invalid request officer"})
 		return
 	}
 
-	db := dbConn()
+	db := DbConn()
 	insert, err := db.Prepare("INSERT INTO officers(name) VALUES(?)")
 	if err != nil {
 		panic(err.Error())
@@ -128,7 +130,7 @@ func CreateOfficer(w http.ResponseWriter, r *http.Request) {
 
 	message := "Officer '" + officer.NAME + "' is created"
 	log.Println(message)
-	respondWithJSON(w, http.StatusAccepted, message)
+	respondWithJSON(w, http.StatusAccepted, map[string]string{"success": message})
 }
 
 func DeleteOfficer(w http.ResponseWriter, r *http.Request) {
@@ -140,7 +142,7 @@ func DeleteOfficer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := dbConn()
+	db := DbConn()
 	delResult, err := db.Prepare("DELETE FROM officers WHERE id=?")
 	if err != nil {
 		panic(err.Error())
