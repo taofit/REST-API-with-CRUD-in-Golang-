@@ -38,10 +38,11 @@ Stolen bikes is a typical problem in Malmö, where the Docly HQ is. We need your
 # How to run and test the API
   
 1. Firstly, run all the statements in internal/go.sql file to create a mysql database and its tables.
-2. Go to cmd folder and run command: `go run main.go` to start the server.
-3. Open Postman->Body->raw, enter the json data according to the requirement in each endpoint below.
-4. To run test, go to cms folder and run command: `go test -v`
-5. API endpoints to the requirements is below:
+2. Secondly, modify the database connection on line 6 in internal/db.go file according to your local mysql connection setting.
+3. Go to cmd folder and run command: `go run main.go` to start the server.
+4. Open Postman->Body->raw, enter the json data according to the requirement in each endpoint below.
+5. To run test, go to cms folder and run command: `go test -v`. The program implements the test to the officer API.
+6. API endpoints to the requirements is below:
 
 - [ ] The police wants to able to add, edit and remove officers. (police officer endpoint:)
   - http://localhost:8080/officers                method: GET, description: fetch all the police officers, example: enter http://localhost:8080/officers in the postman's address input
@@ -54,8 +55,8 @@ Stolen bikes is a typical problem in Malmö, where the Docly HQ is. We need your
   - http://localhost:8080/bike-thefts             method: GET, description: to fetch all bike theft cases
   - http://localhost:8080/bike-thefts             method: POST, description: to create a bike theft case with one image file
                                                   example: go to Postman->Body->form-data, 
-                                                  step 1: upload image file, under `KEY` enter `image` and choose `file`, under `VALUE` select an image file from the local computer.      
-                                                  step 2: enter json data, in Postman->Body->form-data, under `KEY` enter `data`, under `VALUE` paste the json data like below:
+                                                  - step 1: upload image file, under `KEY` enter `image` and choose `file`, under `VALUE` select an image file from the local computer.      
+                                                  - step 2: enter json data, in Postman->Body->form-data, under `KEY` enter `data`, under `VALUE` paste the json data like below:
                                                   {
                                                       "title": "people who are Joyriders",
                                                       "brand": "water soul",
@@ -70,7 +71,7 @@ Stolen bikes is a typical problem in Malmö, where the Docly HQ is. We need your
                                                       "city": "malmö",
                                                       "description": "green, old and well built, 24 model"
                                                   }
-  - http://localhost:8080/bike-thefts/{id}        method: GET, description: to fetch a bike theft case
+  - http://localhost:8080/bike-thefts/{id}        method: GET, description: to fetch a bike theft case by case id
   - http://localhost:8080/bike-thefts/image/{id}  method: GET, description: to fetch a bike image by case id
 
 - [ ] The police should be able to report bikes as found. When the police finds a bike the case should be marked as resolved
@@ -80,11 +81,11 @@ Stolen bikes is a typical problem in Malmö, where the Docly HQ is. We need your
   - http://localhost:8080/case-to-officer         method: POST, example: {"case": 12,"officer": 3}, note: case id and officer id
 
 - [ ] The police officer in charge of the case should be marked as available to take a new case. 
-  - It is achieved by looking for officer who does not have unsolved cases in the bike_theft table
+  - Availability is achieved by identifying a officer who does not have unsolved cases in the bike_theft table.
 
 - [ ] The system should be able to assign unassigned cases to police officers as they become available.
   - It is achieved by periodically executing function AssignCases that run some sql queries to check and update the `bike_thefts` table
-  
+
 # Suggested data model
 
 ### Police officers
