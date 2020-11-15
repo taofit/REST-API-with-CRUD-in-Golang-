@@ -37,14 +37,14 @@ Stolen bikes is a typical problem in Malmö, where the Docly HQ is. We need your
 
 # How to run and test the API
   
-1. Firstly, run all the statements in go.sql file to create a mysql database and its tables.
-2. Go to cmd folder and run command: `go run main.go` to run start server.
+1. Firstly, run all the statements in internal/go.sql file to create a mysql database and its tables.
+2. Go to cmd folder and run command: `go run main.go` to start the server.
 3. Open Postman->Body->raw, enter the json data according to the requirement in each endpoint below.
 4. To run test, go to cms folder and run command: `go test -v`
 5. API endpoints to the requirements is below:
 
 - [ ] The police wants to able to add, edit and remove officers. (police officer endpoint:)
-  - http://localhost:8080/officers                method: GET, description: fetch all the police officers 
+  - http://localhost:8080/officers                method: GET, description: fetch all the police officers, example: enter http://localhost:8080/officers in the postman's address input
   - http://localhost:8080/officers/{id}           method: GET, description: fetch one police officer by id, for example fetch officer whose id is 3: http://localhost:8080/officers/3
   - http://localhost:8080/officers/{id}           method: PUT, description: modify one police officer, go to Postman->Body->raw, enter: {"name": "Ellie Johansson"}
   - http://localhost:8080/officers                method: POST, description: create one police officer, go to Postman->Body->raw, enter: example: {"name": "Lars Nilsson"}
@@ -82,6 +82,9 @@ Stolen bikes is a typical problem in Malmö, where the Docly HQ is. We need your
 - [ ] The police officer in charge of the case should be marked as available to take a new case. 
   - It is achieved by looking for officer who does not have unsolved cases in the bike_theft table
 
+- [ ] The system should be able to assign unassigned cases to police officers as they become available.
+  - It is achieved by periodically executing function AssignCases that run some sql queries to check and update the `bike_thefts` table
+  
 # Suggested data model
 
 ### Police officers

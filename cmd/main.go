@@ -47,7 +47,7 @@ func main() {
 	fmt.Println("Bike Theft Report API")
 	router := mux.NewRouter()
 	initializeRoutes(router)
-	// go autoAssignCaseToOfficer()
+	go autoAssignCaseToOfficer()
 	err := http.ListenAndServe(":8080", router)
 	if err != nil {
 		panic(err.Error())
